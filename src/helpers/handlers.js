@@ -29,3 +29,15 @@ function handleDrawing() {
     }
   }
 }
+
+// ensures a number stays within a defined range.
+function clamp(n, min, max) {
+  if (n < min) return min;
+  if (n > max) return max;
+  return n;
+}
+
+// calculates the next brush size based on user input while enforcing limits.
+function updateBrushSize(currentSize, delta) {
+  return clamp(currentSize + delta, MIN_BRUSH, MAX_BRUSH);
+}

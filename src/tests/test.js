@@ -1,33 +1,8 @@
 // -------- run tests ---------------
 
-// checks whether a condition is true and reports the result.
-function assert(condition, message) {
-  if (!condition) {
-    console.error("❌ FAIL:", message);
-  } else {
-    console.log("✅ PASS:", message);
-  }
-}
-
-// ensures a number stays within a defined range.
-function clamp(n, min, max) {
-  if (n < min) return min;
-  if (n > max) return max;
-  return n;
-}
-
-// calculates the next brush size based on user input while enforcing limits.
-function updateBrushSize(currentSize, delta) {
-  return clamp(currentSize + delta, MIN_BRUSH, MAX_BRUSH);
-}
-
 function runAllTests() {
   console.log("🧪 Running tests...");
 
-  // What these test:
-  //   Normal values remain unchanged
-  //   Values below the minimum are corrected
-  //   Values above the maximum are capped
   testDescribe("clamp()", () => {
     it("keeps value in range", () => {
       expect(clamp(10, 2, 20)).toBe(10);
@@ -43,25 +18,101 @@ function runAllTests() {
   });
 
   testDescribe("updateBrushSize()", () => {
-    it("brush increases normally", () => {
-      expect(updateBrushSize(10, 2, 20)).toBe(12);
+    globalThis.MIN_BRUSH = 2;
+    globalThis.MAX_BRUSH = 20;
+
+    it("increases size correctly", () => {
+      // start at 10, add 5 -> expect 15
+      expect(updateBrushSize(8, 2)).toBe(10);
     });
 
-    it("brush never goes below min", () => {
-      expect(updateBrushSize(2, 2, 20)).toBe(2);
+    it("decreases size correctly", () => {
+      expect(updateBrushSize(12, -2)).toBe(10);
+    });
+
+    it("stops at MAX_BRUSH", () => {
+      expect(updateBrushSize(10, 50)).toBe(20);
+    });
+
+    it("stops at MIN_BRUSH", () => {
+      expect(updateBrushSize(1, -2)).toBe(2);
     });
   });
 
-  testSummary();
+  // test if the mouse is inside or outside the canvas
+  testDescribe("isMouseInside helper", () => {
+    it("returns TRUE when mouse is inside the box and pressed", () => {
+      // manually fake mouse location this variables is built in p5.js
+      mouseX = 50;
+      mouseY = 50;
+      mouseIsPressed = true;
 
-  // What these test:
-  //   Brush size increases correctly
-  //   Brush size never drops below the minimum
-  //   Brush size never exceeds the maximum
-  // assert(updateBrushSize(10, 2) === 12, "brush increases normally");
-  // assert(updateBrushSize(2, -10) === 2, "brush never goes below min");
-  // assert(updateBrushSize(20, 10) === 20, "brush never exceeds max");
-  // assert(updateBrushSize(18, 10) === 20, "brush clamps at max");
+      // check a box at 0,0 with width 900, height 700
+      // The mouse (50,50) is definitely inside this box.
+      const result = isMouseInside(0, 0, 900, 700);
+
+      // assert
+      expect(result).toBe(true);
+    });
+
+    it("returns FALSE when mouse is outside the box", () => {
+      mouseX = 1000;
+      mouseY = 1000;
+      mouseIsPressed = true;
+
+      // execute
+      const result = isMouseInside(0, 0, 900, 700);
+
+      // assert
+      expect(result).toBe(false);
+    });
+
+    it("returns FALSE when mouse is not pressed", () => {
+      // correct position, but click is released
+      mouseX = 50;
+      mouseY = 50;
+      mouseIsPressed = false;
+
+      // execute
+      const result = isMouseInside(0, 0, 900, 700);
+
+      // assert
+      expect(result).toBe(false);
+    });
+  });
+
+  // test clicking buttons if its successfully changes the color
+  testDescribe("handleToolbar logic", () => {
+    it("updates fillColor when a color button is clicked", () => {
+      // --- 1. SETUP (The Mocking Phase) ---
+
+      // Fake the 'buttonConfig' global array with one dummy button
+      // We place it at x=0, y=0 with size 10x10
+      globalThis.buttonConfig = [
+        { x: 10, y: 10, w: 80, h: 30, label: "RED", color: "red" },
+      ];
+
+      // Fake the P5 mouse variables to be INSIDE that button
+      globalThis.mouseX = 15;
+      globalThis.mouseY = 15;
+      globalThis.mouseIsPressed = true;
+
+      // Fake the helper function 'isMouseInside' if it's not loaded
+      // (Or assume it's loaded from your previous file)
+      // For this test, we can just ensure the loop inside handleToolbar works.
+
+      // Reset fillColor to verify it changes
+      globalThis.fillColor = "black";
+
+      // --- 2. EXECUTE ---
+      handleToolbar();
+
+      // --- 3. ASSERT ---
+      // Did the global variable change to match the button's color?
+      expect(fillColor).toBe("red");
+    });
+  });
+  testSummary();
 }
 
 // Mini test runner (describe / it / expect)

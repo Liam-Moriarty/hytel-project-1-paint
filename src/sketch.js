@@ -31,6 +31,8 @@ function setup() {
 function draw() {
   // this function is to create a border in the canvas
   canvasBorder();
+
+  // to draw the toolbar and draw the lines
   handleToolbar();
   handleDrawing();
 }
