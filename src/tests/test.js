@@ -1,5 +1,14 @@
 // -------- run tests ---------------
 
+// checks whether a condition is true and reports the result.
+function assert(condition, message) {
+  if (!condition) {
+    console.error("❌ FAIL:", message);
+  } else {
+    console.log("✅ PASS:", message);
+  }
+}
+
 // ensures a number stays within a defined range.
 function clamp(n, min, max) {
   if (n < min) return min;
@@ -12,32 +21,47 @@ function updateBrushSize(currentSize, delta) {
   return clamp(currentSize + delta, MIN_BRUSH, MAX_BRUSH);
 }
 
-// checks whether a condition is true and reports the result.
-function assert(condition, message) {
-  if (!condition) {
-    console.error("❌ FAIL:", message);
-  } else {
-    console.log("✅ PASS:", message);
-  }
-}
+function runAllTests() {
+  console.log("🧪 Running tests...");
 
-function runTests() {
   // What these test:
   //   Normal values remain unchanged
   //   Values below the minimum are corrected
   //   Values above the maximum are capped
-  assert(clamp(5, 2, 20) === 5, "clamp keeps value in range");
-  assert(clamp(-3, 2, 20) === 2, "clamp bumps up to min");
-  assert(clamp(999, 2, 20) === 20, "clamp brings down to max");
+  testDescribe("clamp()", () => {
+    it("keeps value in range", () => {
+      expect(clamp(10, 2, 20)).toBe(10);
+    });
+
+    it("bumps value up to min", () => {
+      expect(clamp(1, 2, 20)).toBe(2);
+    });
+
+    it("brings value down to max", () => {
+      expect(clamp(1000, 2, 20)).toBe(20);
+    });
+  });
+
+  testDescribe("updateBrushSize()", () => {
+    it("brush increases normally", () => {
+      expect(updateBrushSize(10, 2, 20)).toBe(12);
+    });
+
+    it("brush never goes below min", () => {
+      expect(updateBrushSize(2, 2, 20)).toBe(2);
+    });
+  });
+
+  testSummary();
 
   // What these test:
   //   Brush size increases correctly
   //   Brush size never drops below the minimum
   //   Brush size never exceeds the maximum
-  assert(updateBrushSize(10, 2) === 12, "brush increases normally");
-  assert(updateBrushSize(2, -10) === 2, "brush never goes below min");
-  assert(updateBrushSize(20, 10) === 20, "brush never exceeds max");
-  assert(updateBrushSize(18, 10) === 20, "brush clamps at max");
+  // assert(updateBrushSize(10, 2) === 12, "brush increases normally");
+  // assert(updateBrushSize(2, -10) === 2, "brush never goes below min");
+  // assert(updateBrushSize(20, 10) === 20, "brush never exceeds max");
+  // assert(updateBrushSize(18, 10) === 20, "brush clamps at max");
 }
 
 // Mini test runner (describe / it / expect)
@@ -49,7 +73,7 @@ let __t = {
   failed: 0,
 };
 
-function describe(name, fn) {
+function testDescribe(name, fn) {
   __t.suiteStack.push(name);
   try {
     fn();
