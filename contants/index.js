@@ -1,0 +1,45 @@
+const buttonConfig = [
+  { label: "RED", color: "red", x: 10, y: 10, w: 80, h: 30, type: "text" },
+  { label: "GREEN", color: "green", x: 100, y: 10, w: 80, h: 30, type: "text" },
+  {
+    label: "BLUE",
+    color: "blue",
+    x: 190,
+    y: 10,
+    w: 80,
+    h: 30,
+    type: "text",
+  },
+  {
+    label: "RESET COLOR",
+    color: "black",
+    x: 280,
+    y: 10,
+    w: 130,
+    h: 30,
+    type: "text",
+  },
+  {
+    label: "TRASH",
+    color: "#5d5b5b",
+    x: 100,
+    y: 50,
+    w: 40,
+    h: 30,
+    type: "icon",
+  },
+  {
+    label: "ERASER",
+    color: "white",
+    x: 150,
+    y: 50,
+    w: 40,
+    h: 30,
+    type: "icon",
+  },
+];
+
+const sizeButtons = [
+  { label: "-", delta: -2, x: 200, y: 50, w: 30, h: 30 },
+  { label: "+", delta: 2, x: 270, y: 50, w: 30, h: 30 },
+];
