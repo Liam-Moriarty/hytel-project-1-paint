@@ -1,3 +1,62 @@
+let myBrush; // The Object Instance
+let bgButton; // Example of a trash button area
+
+class brush {
+  constructor(startSize = 10, startColor = "black") {
+    this.size = startSize;
+    this.color = startColor;
+
+    // remember the last color so we can switch back from eraser
+    this._savedColor = startColor;
+
+    // constants brush min and max sizes
+    this.MIN_SIZE = 2;
+    this.MAX_SIZE = 20;
+  }
+
+  changeSize(delta) {
+    const newSize = this.size + delta;
+
+    if (newSize < this.MIN_SIZE) this.size = this.MIN_SIZE;
+    else if (newSize > this.MAX_SIZE) this.size = this.MAX_SIZE;
+    else this.size = newSize;
+
+    return newSize;
+  }
+
+  setColor(newColor) {
+    this.isEraserMode = false; // turn off eraser if picking a color
+    this.color = newColor;
+    this._savedColor = newColor; // remember this preference
+    return this.color;
+  }
+
+  // returns white to confirm it worked
+  activateEraser() {
+    this.isEraserMode = true;
+    this.color = "white";
+    return this.color;
+  }
+
+  // returns true to signal a reset is needed reset/trash logic
+  shouldReset() {
+    return true;
+  }
+
+  // --- VISUAL METHODS  ---
+
+  render() {
+    // Only draw if mouse is pressed
+    if (mouseIsPressed && mouseY > 105) {
+      stroke(this.color);
+      strokeWeight(this.size);
+      strokeCap(ROUND);
+      // Draw line from previous mouse pos to current
+      line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+  }
+}
+
 // this runs first before anything else.
 // it loads the image files so they are ready to use.
 function preload() {
@@ -18,12 +77,13 @@ function setup() {
   }
 
   const CANVAS = document.getElementById("canvas");
-  const width = CANVAS.offsetWidth;
-  const height = CANVAS.offsetHeight;
-  const cnv = createCanvas(width, height);
-  cnv.parent("canvas");
+  createCanvas(CANVAS.offsetWidth, CANVAS.offsetHeight).parent("canvas");
+
+  // Initialize the Object
+  myBrush = new brush(10, "black");
 
   toolbarInterface();
+  selectColor();
 }
 
 // this function handles two things
@@ -33,24 +93,68 @@ function draw() {
   canvasBorder();
 
   // to draw the toolbar and draw the lines
-  handleToolbar();
-  handleDrawing();
+  // handleToolbar();
+  // handleDrawing();
+
+  // The object handles the drawing logic now!
+  myBrush.render();
 }
 
-function mouseClicked() {
+function mousePressed() {
   // Check the Size Buttons
-  for (let btn of sizeButtons) {
-    // If we clicked a size button...
-    if (
-      mouseX > btn.x &&
-      mouseX < btn.x + btn.w &&
-      mouseY > btn.y &&
-      mouseY < btn.y + btn.h
-    ) {
-      brushSize = updateBrushSize(brushSize, btn.delta);
+  // for (let btn of sizeButtons) {
+  //   if (
+  //     mouseX > btn.x &&
+  //     mouseX < btn.x + btn.w &&
+  //     mouseY > btn.y &&
+  //     mouseY < btn.y + btn.h
+  //   ) {
+  //     brushSize = updateBrushSize(brushSize, btn.delta);
+  //     toolbarInterface();
+  //   }
+  // }
 
-      // Update the screen
-      toolbarInterface();
-    }
+  // trash button
+  if (isMouseInside(100, 50, 40, 30)) {
+    background("white");
+    toolbarInterface();
+    return;
+  }
+
+  // eraser button
+  if (isMouseInside(150, 50, 40, 30)) {
+    myBrush.activateEraser();
+    return;
+  }
+
+  // --- HANDLE SIZES ---
+
+  // minus button
+  if (isMouseInside(200, 50, 30, 30)) {
+    myBrush.changeSize(-2);
+    toolbarInterface();
+  }
+
+  // plus button
+  if (isMouseInside(270, 50, 30, 30)) {
+    myBrush.changeSize(2);
+    toolbarInterface();
+  }
+
+  // --- HANDLE COLORS ---
+  if (isMouseInside(10, 10, 80, 30)) {
+    myBrush.setColor("red");
+  }
+
+  if (isMouseInside(100, 10, 80, 30)) {
+    myBrush.setColor("green");
+  }
+
+  if (isMouseInside(190, 10, 80, 30)) {
+    myBrush.setColor("blue");
+  }
+
+  if (isMouseInside(280, 10, 130, 30)) {
+    myBrush.setColor("black");
   }
 }

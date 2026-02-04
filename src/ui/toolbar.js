@@ -14,9 +14,13 @@ function toolbarInterface() {
   // Draw the current size number in the middle
   fill(0);
   noStroke();
-  text(brushSize, 250, 67);
+  if (typeof myBrush !== "undefined") {
+    text(myBrush.size, 250, 67);
+  } else {
+    text(10, 250, 67); // Default fallback
+  }
 
-  selectColor();
+  // selectColor();
 }
 
 function toolbarColors() {
@@ -75,7 +79,14 @@ function selectColor() {
   colorPicker.style("width", "80px");
 
   // listens for changes to the color picker
+  // colorPicker.input(() => {
+  //   fillColor = colorPicker.value();
+  // });
+
   colorPicker.input(() => {
-    fillColor = colorPicker.value();
+    // Check if brush exists before setting to avoid errors
+    if (typeof myBrush !== "undefined") {
+      myBrush.setColor(colorPicker.value());
+    }
   });
 }
