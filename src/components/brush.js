@@ -46,3 +46,30 @@ class Brush {
     }
   }
 }
+class SprayBrush extends Brush {
+  constructor(startSize = 20, startColor = "black") {
+    super(startSize, startColor);
+
+    this.density = 50;
+  }
+
+  render() {
+    // only paint if mouse is pressed
+    if (mouseIsPressed && mouseY > 90) {
+      stroke(this.color);
+      strokeWeight(1); // Spray dots are always small
+
+      const count = this.density || 50;
+
+      for (let i = 0; i < count; i++) {
+        const offsetX = random(-this.size, this.size);
+        const offsetY = random(-this.size, this.size);
+
+        // only draw if inside the circle
+        if (offsetX * offsetX + offsetY * offsetY < this.size * this.size) {
+          point(mouseX + offsetX, mouseY + offsetY);
+        }
+      }
+    }
+  }
+}

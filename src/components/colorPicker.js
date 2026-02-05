@@ -7,8 +7,8 @@ function selectColor() {
 
   colorPicker.input(() => {
     // check if brush exists before setting to avoid errors
-    if (typeof myBrush !== "undefined") {
-      myBrush.setColor(colorPicker.value());
+    if (typeof activeBrush !== "undefined") {
+      activeBrush.setColor(colorPicker.value());
     }
   });
 }

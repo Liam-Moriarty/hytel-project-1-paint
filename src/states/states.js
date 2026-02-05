@@ -1,7 +1,10 @@
 // global variables stores data in canvas
-let myBrush;
 let eraserIcon;
 let trashIcon;
 let myToolbar;
 
-const TEST_MODE = false;
+let lineBrush;
+let sprayBrush;
+let activeBrush;
+
+const TEST_MODE = true;

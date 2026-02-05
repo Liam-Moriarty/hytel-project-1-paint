@@ -16,27 +16,31 @@ function setup() {
   const CANVAS = document.getElementById("canvas");
   createCanvas(CANVAS.offsetWidth, CANVAS.offsetHeight).parent("canvas");
 
-  // Initialize the Objects
-  myBrush = new Brush(10, "black");
+  // initialize the Objects
+  lineBrush = new Brush(10, "black");
+  sprayBrush = new SprayBrush(20, "red"); // Starts bigger
+  activeBrush = lineBrush;
+
   myToolbar = new Toolbar(buttonConfig, sizeButtons);
 
-  myToolbar.render(myBrush);
+  myToolbar.setBrush(activeBrush);
+
   selectColor();
 }
 
 function draw() {
   // if brush isn't ready or in test mode, stop drawing.
-  if (!myBrush) return;
+  if (!activeBrush) return;
 
   // The object handles the drawing logic
-  myBrush.render();
+  activeBrush.render();
 
-  myToolbar.render(myBrush);
+  myToolbar.render(activeBrush);
 
   canvasBorder();
 }
 
 function mousePressed() {
-  // The toolbar handles all button logic
-  myToolbar.handleClicks(myBrush);
+  // the toolbar handles all button logic
+  myToolbar.handleClicks(mouseX, mouseY, activeBrush);
 }

@@ -5,6 +5,13 @@ class Toolbar {
 
     this.height = 90;
     this.bgColor = 220;
+
+    // initialize as null to prevent crashes
+    this.targetBrush = null;
+  }
+
+  setBrush(brushInstance) {
+    this.targetBrush = brushInstance;
   }
 
   render(connectedBrush) {
@@ -63,7 +70,7 @@ class Toolbar {
     text(size, 250, 67);
   }
 
-  handleClicks(targetBrush) {
+  handleClicks(mx, my, targetBrush) {
     for (let btn of this.buttons) {
       if (isMouseInside(btn.x, btn.y, btn.w, btn.h)) {
         if (btn.label === "TRASH") {
@@ -74,7 +81,18 @@ class Toolbar {
           targetBrush.activateEraser();
           return;
         }
-        // Default Color
+
+        if (btn.label === "LINE") {
+          switchBrush(lineBrush);
+          return true;
+        }
+
+        if (btn.label === "SPRAY") {
+          switchBrush(sprayBrush);
+          return true;
+        }
+
+        // default color
         targetBrush.setColor(
           btn.color === "black" && btn.label === "RESET COLOR"
             ? "black"

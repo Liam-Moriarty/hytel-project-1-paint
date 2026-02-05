@@ -7,7 +7,7 @@ function runAllTests() {
     console.log("TESTING INITIAL STATES...");
     testDescribe("Initial States", () => {
       it("checks the initial states", () => {
-        const b = new brush(10);
+        const b = new Brush(10);
         expect(b.size).toBe(10);
         expect(b.color).toBe("black");
         expect(b.MIN_SIZE).toBe(2);
@@ -19,7 +19,7 @@ function runAllTests() {
     console.log("TESTING SIZES FEATURES...");
     testDescribe("Sizing Features", () => {
       it("increases size correctly", () => {
-        const b = new brush(10); // Start at 10
+        const b = new Brush(10); // Start at 10
 
         // 10 + 5 = 15
         const result = b.changeSize(5);
@@ -29,19 +29,19 @@ function runAllTests() {
       });
 
       it("decreases size correctly", () => {
-        const b = new brush(10);
+        const b = new Brush(10);
         b.changeSize(-3); // 10 - 3 = 7
         expect(b.size).toBe(7);
       });
 
       it("stops size at MAX_SIZE (20)", () => {
-        const b = new brush(18);
+        const b = new Brush(18);
         b.changeSize(100);
         expect(b.size).toBe(20);
       });
 
       it("stops size at MIN_SIZE (2)", () => {
-        const b = new brush(4);
+        const b = new Brush(4);
         b.changeSize(-10);
         expect(b.size).toBe(2);
       });
@@ -52,7 +52,7 @@ function runAllTests() {
     console.log("TESTING COLOR CHANGE FEATURE...");
     testDescribe("Color Feature", () => {
       it("changes color and updates state", () => {
-        const b = new brush();
+        const b = new Brush();
         b.setColor("blue");
         expect(b.color).toBe("blue");
       });
@@ -63,7 +63,7 @@ function runAllTests() {
     console.log("TESTING ERASER FEATURES...");
     testDescribe("Eraser Features", () => {
       it("activates eraser mode correctly", () => {
-        const b = new brush(10, "red");
+        const b = new Brush(10, "red");
 
         // Turn on Eraser
         b.activateEraser();
@@ -73,7 +73,7 @@ function runAllTests() {
       });
 
       it("disables eraser mode when a new color is picked", () => {
-        const b = new brush();
+        const b = new Brush();
 
         // 1. Turn on Eraser
         b.activateEraser();
@@ -88,7 +88,7 @@ function runAllTests() {
       });
 
       it("remembers the saved color correctly", () => {
-        const b = new brush(10, "purple");
+        const b = new Brush(10, "purple");
         expect(b._savedColor).toBe("purple");
 
         b.setColor("orange");
@@ -97,7 +97,9 @@ function runAllTests() {
     });
   }, 8000);
 
-  testSummary();
+  setTimeout(() => {
+    testSummary();
+  }, 9000);
 }
 
 // Mini test runner (describe / it / expect)

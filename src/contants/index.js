@@ -37,6 +37,24 @@ const buttonConfig = [
     h: 30,
     type: "icon",
   },
+  {
+    label: "LINE",
+    color: "#5d5b5b",
+    x: 310,
+    y: 50,
+    w: 50,
+    h: 30,
+    type: "text",
+  },
+  {
+    label: "SPRAY",
+    color: "#5d5b5b",
+    x: 370,
+    y: 50,
+    w: 50,
+    h: 30,
+    type: "text",
+  },
 ];
 
 const sizeButtons = [
