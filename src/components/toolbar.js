@@ -1,5 +1,4 @@
 // this draws the toolbar and all the buttons.
-// we keep this separate so we can call it again after using the trash button.
 function toolbarInterface() {
   // toolbar interface
   noStroke();
@@ -11,16 +10,15 @@ function toolbarInterface() {
   toolbarColors();
   toolbarSizeBtn();
 
-  // Draw the current size number in the middle
+  // draw the current size number in the middle
   fill(0);
   noStroke();
+
   if (typeof myBrush !== "undefined") {
     text(myBrush.size, 250, 67);
   } else {
-    text(10, 250, 67); // Default fallback
+    text(10, 250, 67); // default fallback
   }
-
-  // selectColor();
 }
 
 function toolbarColors() {
@@ -78,13 +76,8 @@ function selectColor() {
   colorPicker.position(10, 50);
   colorPicker.style("width", "80px");
 
-  // listens for changes to the color picker
-  // colorPicker.input(() => {
-  //   fillColor = colorPicker.value();
-  // });
-
   colorPicker.input(() => {
-    // Check if brush exists before setting to avoid errors
+    // check if brush exists before setting to avoid errors
     if (typeof myBrush !== "undefined") {
       myBrush.setColor(colorPicker.value());
     }

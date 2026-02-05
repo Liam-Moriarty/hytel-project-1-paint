@@ -1,4 +1,4 @@
-// draws a thin black outline around the entire app so you can see the edges.
+// draws a thin black outline around the entire app to see the edges.
 function canvasBorder() {
   push();
   stroke(0);

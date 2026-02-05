@@ -1,117 +1,102 @@
 // -------- run tests ---------------
 
 function runAllTests() {
-  console.log("🧪 Running tests...");
+  console.log("Running tests...");
 
-  testDescribe("clamp()", () => {
-    it("keeps value in range", () => {
-      expect(clamp(10, 2, 20)).toBe(10);
+  setTimeout(() => {
+    console.log("TESTING INITIAL STATES...");
+    testDescribe("Initial States", () => {
+      it("checks the initial states", () => {
+        const b = new brush(10);
+        expect(b.size).toBe(10);
+        expect(b.color).toBe("black");
+        expect(b.MIN_SIZE).toBe(2);
+      });
     });
+  }, 2000);
 
-    it("bumps value up to min", () => {
-      expect(clamp(1, 2, 20)).toBe(2);
+  setTimeout(() => {
+    console.log("TESTING SIZES FEATURES...");
+    testDescribe("Sizing Features", () => {
+      it("increases size correctly", () => {
+        const b = new brush(10); // Start at 10
+
+        // 10 + 5 = 15
+        const result = b.changeSize(5);
+
+        expect(result).toBe(15); // Check return value
+        expect(b.size).toBe(15); // Check internal state
+      });
+
+      it("decreases size correctly", () => {
+        const b = new brush(10);
+        b.changeSize(-3); // 10 - 3 = 7
+        expect(b.size).toBe(7);
+      });
+
+      it("stops size at MAX_SIZE (20)", () => {
+        const b = new brush(18);
+        b.changeSize(100);
+        expect(b.size).toBe(20);
+      });
+
+      it("stops size at MIN_SIZE (2)", () => {
+        const b = new brush(4);
+        b.changeSize(-10);
+        expect(b.size).toBe(2);
+      });
     });
+  }, 4000);
 
-    it("brings value down to max", () => {
-      expect(clamp(1000, 2, 20)).toBe(20);
+  setTimeout(() => {
+    console.log("TESTING COLOR CHANGE FEATURE...");
+    testDescribe("Color Feature", () => {
+      it("changes color and updates state", () => {
+        const b = new brush();
+        b.setColor("blue");
+        expect(b.color).toBe("blue");
+      });
     });
-  });
+  }, 6000);
 
-  testDescribe("updateBrushSize()", () => {
-    globalThis.MIN_BRUSH = 2;
-    globalThis.MAX_BRUSH = 20;
+  setTimeout(() => {
+    console.log("TESTING ERASER FEATURES...");
+    testDescribe("Eraser Features", () => {
+      it("activates eraser mode correctly", () => {
+        const b = new brush(10, "red");
 
-    it("increases size correctly", () => {
-      // start at 10, add 5 -> expect 15
-      expect(updateBrushSize(8, 2)).toBe(10);
+        // Turn on Eraser
+        b.activateEraser();
+
+        expect(b.color).toBe("white");
+        expect(b.isEraserMode).toBe(true);
+      });
+
+      it("disables eraser mode when a new color is picked", () => {
+        const b = new brush();
+
+        // 1. Turn on Eraser
+        b.activateEraser();
+        expect(b.isEraserMode).toBe(true);
+
+        // 2. Pick a color
+        b.setColor("green");
+
+        // 3. Verify Eraser is OFF and color is GREEN
+        expect(b.isEraserMode).toBe(false);
+        expect(b.color).toBe("green");
+      });
+
+      it("remembers the saved color correctly", () => {
+        const b = new brush(10, "purple");
+        expect(b._savedColor).toBe("purple");
+
+        b.setColor("orange");
+        expect(b._savedColor).toBe("orange");
+      });
     });
+  }, 8000);
 
-    it("decreases size correctly", () => {
-      expect(updateBrushSize(12, -2)).toBe(10);
-    });
-
-    it("stops at MAX_BRUSH", () => {
-      expect(updateBrushSize(10, 50)).toBe(20);
-    });
-
-    it("stops at MIN_BRUSH", () => {
-      expect(updateBrushSize(1, -2)).toBe(2);
-    });
-  });
-
-  // test if the mouse is inside or outside the canvas
-  testDescribe("isMouseInside helper", () => {
-    it("returns TRUE when mouse is inside the box and pressed", () => {
-      // manually fake mouse location this variables is built in p5.js
-      mouseX = 50;
-      mouseY = 50;
-      mouseIsPressed = true;
-
-      // check a box at 0,0 with width 900, height 700
-      // The mouse (50,50) is definitely inside this box.
-      const result = isMouseInside(0, 0, 900, 700);
-
-      // assert
-      expect(result).toBe(true);
-    });
-
-    it("returns FALSE when mouse is outside the box", () => {
-      mouseX = 1000;
-      mouseY = 1000;
-      mouseIsPressed = true;
-
-      // execute
-      const result = isMouseInside(0, 0, 900, 700);
-
-      // assert
-      expect(result).toBe(false);
-    });
-
-    it("returns FALSE when mouse is not pressed", () => {
-      // correct position, but click is released
-      mouseX = 50;
-      mouseY = 50;
-      mouseIsPressed = false;
-
-      // execute
-      const result = isMouseInside(0, 0, 900, 700);
-
-      // assert
-      expect(result).toBe(false);
-    });
-  });
-
-  // test clicking buttons if its successfully changes the color
-  testDescribe("handleToolbar logic", () => {
-    it("updates fillColor when a color button is clicked", () => {
-      // --- 1. SETUP (The Mocking Phase) ---
-
-      // Fake the 'buttonConfig' global array with one dummy button
-      // We place it at x=0, y=0 with size 10x10
-      globalThis.buttonConfig = [
-        { x: 10, y: 10, w: 80, h: 30, label: "RED", color: "red" },
-      ];
-
-      // Fake the P5 mouse variables to be INSIDE that button
-      globalThis.mouseX = 15;
-      globalThis.mouseY = 15;
-      globalThis.mouseIsPressed = true;
-
-      // Fake the helper function 'isMouseInside' if it's not loaded
-      // (Or assume it's loaded from your previous file)
-      // For this test, we can just ensure the loop inside handleToolbar works.
-
-      // Reset fillColor to verify it changes
-      globalThis.fillColor = "black";
-
-      // --- 2. EXECUTE ---
-      handleToolbar();
-
-      // --- 3. ASSERT ---
-      // Did the global variable change to match the button's color?
-      expect(fillColor).toBe("red");
-    });
-  });
   testSummary();
 }
 
