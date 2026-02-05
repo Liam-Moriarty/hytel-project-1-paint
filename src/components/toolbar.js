@@ -75,6 +75,7 @@ class Toolbar {
       if (isMouseInside(btn.x, btn.y, btn.w, btn.h)) {
         if (btn.label === "TRASH") {
           background("white");
+          localStorage.removeItem("mySavedPainting");
           return;
         }
         if (btn.label === "ERASER") {

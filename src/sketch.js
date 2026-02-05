@@ -26,6 +26,8 @@ function setup() {
   myToolbar.setBrush(activeBrush);
 
   selectColor();
+
+  restoreCanvasState();
 }
 
 function draw() {
@@ -43,4 +45,11 @@ function draw() {
 function mousePressed() {
   // the toolbar handles all button logic
   myToolbar.handleClicks(mouseX, mouseY, activeBrush);
+}
+
+function mouseReleased() {
+  // only save if we clicked inside the canvas area
+  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+    saveCanvasState();
+  }
 }
