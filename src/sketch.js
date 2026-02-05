@@ -43,6 +43,8 @@ function draw() {
 }
 
 function mousePressed() {
+  if (TEST_MODE || !myToolbar) return;
+
   // the toolbar handles all button logic
   myToolbar.handleClicks(mouseX, mouseY, activeBrush);
 }
