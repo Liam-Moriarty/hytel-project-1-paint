@@ -1,10 +1,9 @@
-class brush {
+class Brush {
   constructor(startSize = 10, startColor = "black") {
     this.size = startSize;
     this.color = startColor;
     this._savedColor = startColor;
 
-    // constants brush min and max sizes
     this.MIN_SIZE = 2;
     this.MAX_SIZE = 20;
   }

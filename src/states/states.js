@@ -2,5 +2,6 @@
 let myBrush;
 let eraserIcon;
 let trashIcon;
+let myToolbar;
 
-const TEST_MODE = true;
+const TEST_MODE = false;
