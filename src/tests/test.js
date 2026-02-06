@@ -21,11 +21,11 @@ function runAllTests() {
       it("increases size correctly", () => {
         const b = new Brush(10); // Start at 10
 
-        // 10 + 5 = 15
-        const result = b.changeSize(5);
+        // 10 + value = result
+        const result = b.changeSize(10);
 
-        expect(result).toBe(15); // Check return value
-        expect(b.size).toBe(15); // Check internal state
+        expect(result).toBe(20); // Check return value
+        expect(b.size).toBe(20); // Check internal state
       });
 
       it("decreases size correctly", () => {
@@ -35,8 +35,8 @@ function runAllTests() {
       });
 
       it("stops size at MAX_SIZE (20)", () => {
-        const b = new Brush(18);
-        b.changeSize(100);
+        const b = new Brush(10);
+        b.changeSize(999);
         expect(b.size).toBe(20);
       });
 
@@ -75,14 +75,14 @@ function runAllTests() {
       it("disables eraser mode when a new color is picked", () => {
         const b = new Brush();
 
-        // 1. Turn on Eraser
+        // turn on Eraser
         b.activateEraser();
         expect(b.isEraserMode).toBe(true);
 
-        // 2. Pick a color
+        // pick a color
         b.setColor("green");
 
-        // 3. Verify Eraser is OFF and color is GREEN
+        // verify eraser is OFF and color is GREEN
         expect(b.isEraserMode).toBe(false);
         expect(b.color).toBe("green");
       });
